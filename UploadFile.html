@@ -1,0 +1,117 @@
+<html>
+<head>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc11.min.js"></script>
+<script type="text/javascript">
+// See the Configuring section to configure credentials in the SDK
+
+AWS.config.update({accessKeyId: 'AKIAIEPKCW52EVD532ZQ', secretAccessKey: 'aENWJvtwzr+vu0Oo9gm3VKXSvZrAxizMKAByXMTA', region: 'us-east-1'});
+// Configure your region
+// AWS.config.region = ";
+</script>
+<style>
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+
+* { -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -ms-box-sizing:border-box; -o-box-sizing:border-box; box-sizing:border-box; }
+
+html { width: 100%; height:100%; overflow:hidden;}
+
+body { 
+	width: 100%;
+	height:100%;
+	font-family: 'Open Sans', sans-serif;
+	background: #092756;
+	background: -moz-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%),-moz-linear-gradient(top,  rgba(57,173,219,.25) 0%, rgba(42,60,87,.4) 100%), -moz-linear-gradient(-45deg,  #670d10 0%, #092756 100%);
+	background: -webkit-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), -webkit-linear-gradient(top,  rgba(57,173,219,.25) 0%,rgba(42,60,87,.4) 100%), -webkit-linear-gradient(-45deg,  #670d10 0%,#092756 100%);
+	background: -o-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), -o-linear-gradient(top,  rgba(57,173,219,.25) 0%,rgba(42,60,87,.4) 100%), -o-linear-gradient(-45deg,  #670d10 0%,#092756 100%);
+	background: -ms-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), -ms-linear-gradient(top,  rgba(57,173,219,.25) 0%,rgba(42,60,87,.4) 100%), -ms-linear-gradient(-45deg,  #670d10 0%,#092756 100%);
+	background: -webkit-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), linear-gradient(to bottom,  rgba(57,173,219,.25) 0%,rgba(42,60,87,.4) 100%), linear-gradient(135deg,  #670d10 0%,#092756 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3E1D6D', endColorstr='#092756',GradientType=1 );
+}
+.login { 
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -150px 0 0 -150px;
+	width:300px;
+	height:300px;
+}
+.login h1 { color:white; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
+
+
+
+</style>
+
+</head>
+<body>
+<head>
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+</head>
+<div class="login">
+	<h1>Upload To S3</h1>
+	<div clsaa="container" align="center">
+		<div class="row bg-primary">
+		  	<table>
+				<tr>
+					<td>
+						<input type="file" class="btn btn-primary" id="file-chooser" />
+					</td>
+					<td>
+						<button id="upload-button" class="btn btn-success" >Upload</button>
+					</td>
+				</tr>
+			</table>
+	  	</div>
+	</div>
+</div>
+
+<div id="results"></div>
+<script type="text/javascript">
+	var bucket = new AWS.S3({params: {Bucket: 'tests3amz'}});
+	var fileChooser = document.getElementById('file-chooser');
+	var button = document.getElementById('upload-button');
+	var results = document.getElementById('results');
+		button.addEventListener('click', function() {
+	var file = fileChooser.files[0];
+		if (file) {
+			results.innerHTML = "";
+	var params = {Key: file.name, ContentType: file.type, Body: file};
+			bucket.putObject(params, function (err, data) {
+			results.innerHTML = err ? err : '<h1 style="color:white;" align="center"><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />Upload Complete.<h1>';
+			});
+		} else {
+			results.innerHTML = 'Nothing to upload.';
+			}
+		}, false);
+</script>
+
+<div id="status"></div>
+<ul id="objects"></ul>
+<script type="text/javascript">
+var bucket = new AWS.S3({params: {Bucket: 'tests3amz'}});
+bucket.listObjects(function (err, data) {
+	if (err) {
+		document.getElementById('status').innerHTML =
+		'Could not load objects from S3';
+	} else {
+		document.getElementById('status').innerHTML =
+		'Could not load objects from S3';
+	} else {
+		document.getElementById('status').innerHTML =
+		'Loaded ' + data.Contents.length + ' items from S3';
+	for (var i = 0; i < data.Contents.length; i++) {
+		document.getElementById('objects').innerHTML +='<li>' + data.Contents[i].Key + '</li>';
+	}
+	}
+});
+</script>
+
+
+
+
+</body>
+</html>
